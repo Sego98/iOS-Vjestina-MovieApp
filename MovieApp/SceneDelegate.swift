@@ -1,10 +1,3 @@
-//
-//  SceneDelegate.swift
-//  MovieApp
-//
-//  Created by Petar Ljubotina on 28.03.2022..
-//
-
 import UIKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
@@ -18,7 +11,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: windowScene)
-        let vc = InitialViewController()
+        //let vc = InitialViewController()
+        let vc = MovieListViewController()
         window!.rootViewController = vc
         window?.makeKeyAndVisible()
     }

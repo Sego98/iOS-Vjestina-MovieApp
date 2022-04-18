@@ -7,6 +7,7 @@ class InitialViewController: UIViewController{
     private let backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 1)
     private let transparentColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0)
     
+    //used variables
     private var scrollView: UIScrollView!
     private var contentView: UIView!
     private var movieImage: UIImageView!
@@ -25,14 +26,19 @@ class InitialViewController: UIViewController{
     override func viewDidLoad(){
         super.viewDidLoad()
         view.backgroundColor = backgroundColor
-        BuildScreen()
-        AddConstraints()
+        buildScreen()
+        addConstraints()
     }
     
-    private func BuildScreen(){
+    private func buildScreen(){
+        //scroll view
         scrollView = UIScrollView()
-        contentView = UIView()
+        scrollView.backgroundColor = .red
         view.addSubview(scrollView)
+        
+        //content view
+        contentView = UIView()
+        contentView.backgroundColor = .orange
         scrollView.addSubview(contentView)
    
         //movie image
@@ -40,31 +46,30 @@ class InitialViewController: UIViewController{
         contentView.addSubview(movieImage)
         
         //user score label
-        userScore = CreateLabel(text: "78% User Score", fontName: "Arial", fontSize: 20, color: .white)
+        userScore = createLabel(text: "78% User Score", fontName: "Arial", fontSize: 20, color: .white)
         movieImage.addSubview(userScore)
 
         //name label
-        name = CreateLabel(text: "The Hobbit", fontName: "ArialRoundedMTBold", fontSize: 40, color: .white)
+        name = createLabel(text: "The Hobbit", fontName: "ArialRoundedMTBold", fontSize: 40, color: .white)
         movieImage.addSubview(name)
 
         //year label
-        year = CreateLabel(text: "(2012)", fontName: "Arial", fontSize: 40, color: .white)
+        year = createLabel(text: "(2012)", fontName: "Arial", fontSize: 40, color: .white)
         movieImage.addSubview(year)
 
         //date label
-        date = CreateLabel(text: "14/12/2012 (US)", fontName: "Arial", fontSize: 20, color: .white)
+        date = createLabel(text: "14/12/2012 (US)", fontName: "Arial", fontSize: 20, color: .white)
         movieImage.addSubview(date)
 
         //genre label
-        genre = CreateLabel(text: "Adventure, Fantasy", fontName: "Arial", fontSize: 20, color: .white)
+        genre = createLabel(text: "Adventure, Fantasy", fontName: "Arial", fontSize: 20, color: .white)
         movieImage.addSubview(genre)
 
         //duration label
-        duration = CreateLabel(text: "2h 49m", fontName: "ArialRoundedMTBold", fontSize: 20, color: .white)
+        duration = createLabel(text: "2h 49m", fontName: "ArialRoundedMTBold", fontSize: 20, color: .white)
         movieImage.addSubview(duration)
 
         //star button
-        //let star = UIButton()
         imageStar = UIImageView(image: UIImage(systemName: "star"))
         imageStar.layer.backgroundColor = UIColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.6).cgColor
         imageStar.layer.cornerRadius = 20
@@ -73,29 +78,90 @@ class InitialViewController: UIViewController{
         movieImage.addSubview(imageStar)
         
         //overview label
-        overview = CreateLabel(text: "Overview", fontName: "ArialRoundedMTBold", fontSize: 35, color: .black)
+        overview = createLabel(text: "Overview", fontName: "ArialRoundedMTBold", fontSize: 35, color: .black)
         contentView.addSubview(overview)
         
         //multiline text label
-        multiline = CreateLabel(text: "A reluctant Hobbit, Bilbo Baggins, sets out to the Lonely Mountain with a spirited group of dwarves to reclaim their mountain home, and the gold within it from the dragon Smaug.", fontName: "Arial", fontSize: 20, color: .black)
+        multiline = createLabel(text: "A reluctant Hobbit, Bilbo Baggins, sets out to the Lonely Mountain with a spirited group of dwarves to reclaim their mountain home, and the gold within it from the dragon Smaug.", fontName: "Arial", fontSize: 20, color: .black)
         contentView.addSubview(multiline)
         
         //first horizontal stack view
-        let director = CreateVerticalStack(name: "Peter Jackson", title: "Director")
-        let screenplay = CreateVerticalStack(name: "Fran Walsh", title: "Screenplay")
-        let music = CreateVerticalStack(name: "Howard Shore", title: "Music")
-        stackView1 = CreateHorizontalStack(name1: director, name2: screenplay, name3: music)
+        let director = createVerticalStack(name: "Peter Jackson", title: "Director")
+        let screenplay = createVerticalStack(name: "Fran Walsh", title: "Screenplay")
+        let music = createVerticalStack(name: "Howard Shore", title: "Music")
+        stackView1 = createHorizontalStack(name1: director, name2: screenplay, name3: music)
 
         //second horizontal stack view
-        let casting = CreateVerticalStack(name: "Scot Boland", title: "Casting  ")
-        let artDirection = CreateVerticalStack(name: "Simon Bright", title: "Art Direction")
-        let costume = CreateVerticalStack(name: "Bob Buck", title: "Costume")
-        stackView2 = CreateHorizontalStack(name1: casting, name2: artDirection, name3: costume)
+        let casting = createVerticalStack(name: "Scot Boland", title: "Casting  ")
+        let artDirection = createVerticalStack(name: "Simon Bright", title: "Art Direction")
+        let costume = createVerticalStack(name: "Bob Buck", title: "Costume")
+        stackView2 = createHorizontalStack(name1: casting, name2: artDirection, name3: costume)
     }
     
-    private func AddConstraints(){
-        /*Constraints for scrollView and contentView are same as in the presentation
-        but for some reason scrolling doesn't work. :( */
+    //creating label
+    private func createLabel(text: String, fontName: String, fontSize: CGFloat, color: UIColor) -> UILabel{
+        let label = UILabel()
+        label.backgroundColor = transparentColor
+        label.text = text
+        label.textColor = color
+        label.font = UIFont(name: fontName, size: fontSize)
+        label.textAlignment = .left
+        label.numberOfLines = 0
+        label.sizeToFit()
+        return label
+    }
+    
+    //creating vertical stack view with two labels
+    private func createVerticalStack(name: String, title: String) -> UIStackView{
+        let attributedName = NSMutableAttributedString(string: name)
+        let attributedTitle = NSMutableAttributedString(string: title)
+        attributedName.addAttribute(.font, value: UIFont(name: "ArialRoundedMTBold", size: 15) as Any, range: NSRange(location: 0, length: name.count))
+        attributedTitle.addAttribute(.font, value: UIFont(name: "Arial", size: 15) as Any, range: NSRange(location: 0, length: title.count))
+        
+        let nameLabel = UILabel()
+        nameLabel.attributedText = attributedName
+        nameLabel.backgroundColor = transparentColor
+        nameLabel.textColor = .black
+        nameLabel.textAlignment = .left
+        nameLabel.sizeToFit()
+        contentView.addSubview(nameLabel)
+        
+        let titleLabel = UILabel()
+        titleLabel.attributedText = attributedTitle
+        titleLabel.backgroundColor = transparentColor
+        titleLabel.textColor = .black
+        titleLabel.textAlignment = .left
+        titleLabel.sizeToFit()
+        contentView.addSubview(titleLabel)
+        
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.alignment = .fill
+        stackView.distribution = .fillEqually
+        contentView.addSubview(stackView)
+        stackView.addArrangedSubview(nameLabel)
+        stackView.addArrangedSubview(titleLabel)
+        
+        return stackView
+    }
+    
+    //creating horizontal stack with three elements
+    private func createHorizontalStack(name1: UIStackView, name2: UIStackView, name3: UIStackView) -> UIStackView {
+        let stackView = UIStackView()
+        stackView.axis = .horizontal
+        stackView.alignment = .fill
+        stackView.distribution = .fillEqually
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(stackView)
+        
+        stackView.addArrangedSubview(name1)
+        stackView.addArrangedSubview(name2)
+        stackView.addArrangedSubview(name3)
+        
+        return stackView
+    }
+    
+    private func addConstraints(){
         scrollView.snp.makeConstraints {
             $0.edges.equalTo(view.safeAreaLayoutGuide)
                }
@@ -106,10 +172,10 @@ class InitialViewController: UIViewController{
         }
         
         movieImage.translatesAutoresizingMaskIntoConstraints = false
-        movieImage.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        movieImage.topAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.topAnchor).isActive = true
         movieImage.heightAnchor.constraint(equalToConstant: 380).isActive = true
-        movieImage.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
-        movieImage.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
+        movieImage.leadingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.leadingAnchor).isActive = true
+        movieImage.trailingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.trailingAnchor).isActive = true
         
         userScore.translatesAutoresizingMaskIntoConstraints = false
         userScore.topAnchor.constraint(equalTo: movieImage.topAnchor, constant: 200).isActive = true
@@ -150,76 +216,15 @@ class InitialViewController: UIViewController{
         multiline.leadingAnchor.constraint(equalTo: overview.leadingAnchor).isActive = true
         multiline.trailingAnchor.constraint(equalTo: movieImage.trailingAnchor, constant: -20).isActive = true
         
+        stackView1.translatesAutoresizingMaskIntoConstraints = false
         stackView1.topAnchor.constraint(equalTo: multiline.bottomAnchor, constant: 20).isActive = true
-        stackView1.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20).isActive = true
-        stackView1.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20).isActive = true
+        stackView1.leadingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.leadingAnchor, constant: 20).isActive = true
+        stackView1.trailingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.trailingAnchor, constant: -20).isActive = true
         
+        stackView2.translatesAutoresizingMaskIntoConstraints = false
         stackView2.topAnchor.constraint(equalTo: stackView1.bottomAnchor, constant: 20).isActive = true
-        stackView2.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20).isActive = true
-        stackView2.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20).isActive = true
-    }
-    
-    //creating label
-    private func CreateLabel(text: String, fontName: String, fontSize: CGFloat, color: UIColor) -> UILabel{
-        let label = UILabel()
-        label.backgroundColor = transparentColor
-        label.text = text
-        label.textColor = color
-        label.font = UIFont(name: fontName, size: fontSize)
-        label.textAlignment = .left
-        label.numberOfLines = 0
-        label.sizeToFit()
-        return label
-    }
-    
-    //creating vertical stack view with two labels
-    private func CreateVerticalStack(name: String, title: String) -> UIStackView{
-        let attributedName = NSMutableAttributedString(string: name)
-        let attributedTitle = NSMutableAttributedString(string: title)
-        attributedName.addAttribute(.font, value: UIFont(name: "ArialRoundedMTBold", size: 15) as Any, range: NSRange(location: 0, length: name.count))
-        attributedTitle.addAttribute(.font, value: UIFont(name: "Arial", size: 15) as Any, range: NSRange(location: 0, length: title.count))
-        
-        let nameLabel = UILabel()
-        nameLabel.attributedText = attributedName
-        nameLabel.backgroundColor = transparentColor
-        nameLabel.textColor = .black
-        nameLabel.textAlignment = .left
-        nameLabel.sizeToFit()
-        contentView.addSubview(nameLabel)
-        
-        let titleLabel = UILabel()
-        titleLabel.attributedText = attributedTitle
-        titleLabel.backgroundColor = transparentColor
-        titleLabel.textColor = .black
-        titleLabel.textAlignment = .left
-        titleLabel.sizeToFit()
-        contentView.addSubview(titleLabel)
-        
-        let stackView = UIStackView()
-        stackView.axis = .vertical
-        stackView.alignment = .fill
-        stackView.distribution = .fillEqually
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        contentView.addSubview(stackView)
-        stackView.addArrangedSubview(nameLabel)
-        stackView.addArrangedSubview(titleLabel)
-        
-        return stackView
-    }
-    
-    //creating horizontal stack with three elements
-    private func CreateHorizontalStack(name1: UIStackView, name2: UIStackView, name3: UIStackView) -> UIStackView {
-        let stackView = UIStackView()
-        stackView.axis = .horizontal
-        stackView.alignment = .fill
-        stackView.distribution = .fillEqually
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        contentView.addSubview(stackView)
-        
-        stackView.addArrangedSubview(name1)
-        stackView.addArrangedSubview(name2)
-        stackView.addArrangedSubview(name3)
-        
-        return stackView
+        stackView2.leadingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.leadingAnchor, constant: 20).isActive = true
+        stackView2.trailingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.trailingAnchor, constant: -20).isActive = true
+        stackView2.bottomAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.bottomAnchor, constant: -20).isActive = true
     }
 }
