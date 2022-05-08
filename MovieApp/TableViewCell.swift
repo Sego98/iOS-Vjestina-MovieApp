@@ -30,7 +30,7 @@ class TableViewCell: UITableViewCell{
 
         myImage = UIImageView()
         myImage.clipsToBounds = true
-        myImage.contentMode = .scaleAspectFit
+        myImage.contentMode = .scaleToFill
         myImage.layer.masksToBounds = true
         cellView.addSubview(myImage)
         

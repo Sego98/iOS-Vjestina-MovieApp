@@ -2,7 +2,7 @@ import Foundation
 import UIKit
 import SnapKit
 
-class InitialViewController: UIViewController{
+class MovieDetailsViewController: UIViewController{
     //custom colors
     private let backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 1)
     private let transparentColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0)
@@ -33,12 +33,12 @@ class InitialViewController: UIViewController{
     private func buildScreen(){
         //scroll view
         scrollView = UIScrollView()
-        scrollView.backgroundColor = .red
+        scrollView.backgroundColor = backgroundColor
         view.addSubview(scrollView)
         
         //content view
         contentView = UIView()
-        contentView.backgroundColor = .orange
+        contentView.backgroundColor = backgroundColor
         scrollView.addSubview(contentView)
    
         //movie image

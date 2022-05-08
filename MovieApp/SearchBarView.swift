@@ -31,6 +31,7 @@ class SearchBarView: UIStackView {
         //magnifier picture
         magnifier = UIImageView(image: UIImage(systemName: "magnifyingglass"))
         magnifier.tintColor = .gray
+        magnifier.contentMode = .scaleAspectFit
         
         magnifier.snp.makeConstraints {
             $0.height.width.equalTo(barHeight-10)

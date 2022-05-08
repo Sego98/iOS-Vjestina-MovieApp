@@ -5,12 +5,13 @@ import MovieAppData
 
 class CustomCollectionViewCell: UICollectionViewCell{
     static let identifier = "CustomCollectionVewCell"
+    static var imageID: Int = 0
     private let heartColor = UIColor(red: 192/255, green: 192/255, blue: 192/255, alpha: 0.4)
-    private var myImage: UIImageView!
-    private var myLabel: UILabel!
+    public var myImage: UIButton!
+    public var myLabel: UILabel!
     private var myButton: UIButton!
     
-    private let buttonDimension: Int = 30
+    private let buttonDimension: Int = 32
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -23,10 +24,11 @@ class CustomCollectionViewCell: UICollectionViewCell{
     }
         
     func buildCell(){ //set views in the cell
-        myImage = UIImageView()
+        contentView.backgroundColor = .white
+        myImage = UIButton()
         myImage.clipsToBounds = true
         myImage.contentMode = .scaleAspectFit
-        myImage.layer.cornerRadius = 40
+        myImage.layer.cornerRadius = 10
         contentView.addSubview(myImage)
         
         myButton = UIButton()
@@ -37,28 +39,23 @@ class CustomCollectionViewCell: UICollectionViewCell{
         myButton.layer.cornerRadius = CGFloat(buttonDimension/2)
         myButton.backgroundColor = heartColor
         myButton.tintColor = .white
-        //myButton.addTarget(self, action: #selector(heartTapped), for: .touchUpInside)
+        myButton.addTarget(self, action: #selector(heartTapped), for: .touchUpInside)
         myImage.addSubview(myButton)
     }
     
-    public func configure(id: UUID, movies: Array<MovieModel>){
-        for movie in movies{
-            if movie.id == id{
+    public func configure(movieURL: String, id: Int){
                 //set cell image
-                let url = URL(string: movie.imageUrl)
-                let data = try? Data(contentsOf: url!)
-                myImage.image = UIImage(data: data!)
-            }
-        }
+        CustomCollectionViewCell.imageID = id
+        let url = URL(string: movieURL)
+        let data = try? Data(contentsOf: url!)
+        myImage.setImage(UIImage(data: data!), for: .normal)
     }
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        myImage.image = nil
+        myImage.setImage(nil, for: .normal)
     }
     
-    //should fill heart when tapped, but doesn't work
-    /*
     @objc func heartTapped(){
         if myButton.currentImage == UIImage(systemName: "heart") {
             myButton.setImage(UIImage(systemName: "heart.fill"), for: .normal)
@@ -67,7 +64,8 @@ class CustomCollectionViewCell: UICollectionViewCell{
             myButton.setImage(UIImage(systemName: "heart"), for: .normal)
         }
     }
-    */
+    
+    
     
     //cell constraints
     func addConstraints() {
@@ -77,8 +75,8 @@ class CustomCollectionViewCell: UICollectionViewCell{
         }
         
         myButton.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(15)
-            $0.leading.equalToSuperview().offset(15)
+            $0.top.equalToSuperview().offset(9)
+            $0.leading.equalToSuperview().offset(9)
             $0.height.width.equalTo(buttonDimension)
         }
     }
