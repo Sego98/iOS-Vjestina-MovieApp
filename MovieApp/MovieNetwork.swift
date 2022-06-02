@@ -1,7 +1,7 @@
 import Foundation
 import UIKit
 
-class NetworkService {
+class MovieNetworkService {
     enum RequestError: Error{
         case clientError
         case serverError
@@ -9,26 +9,7 @@ class NetworkService {
         case dataDecodingError
     }
     
-    struct Movie: Codable{
-        let backdrop_path: String?
-        let id: Int?
-        let original_language: String?
-        let original_title: String?
-        let overview: String?
-        let popularity: Float?
-        let poster_path: String?
-        let release_date: String?
-        let title: String?
-        let video: Bool?
-        let vote_average: Float?
-        let vote_count: Int?
-    }
-    
-    struct Request: Codable{
-        var results: [Movie]
-    }
-
-    func executeUrlRequest(_ request: URLRequest, completionHandler: @escaping (Request?, RequestError?) -> Void) {
+    func executeUrlRequest(_ request: URLRequest, completionHandler: @escaping (Movie?, RequestError?) -> Void) {
         let dataTask = URLSession.shared.dataTask(with: request) { data, response, err in
             
             guard err == nil else {
@@ -53,7 +34,7 @@ class NetworkService {
                 return
             }
       
-            guard let value = try? JSONDecoder().decode(Request.self, from: data) else {
+            guard let value = try? JSONDecoder().decode(Movie.self, from: data) else {
                 DispatchQueue.main.async {
                     completionHandler(nil, .dataDecodingError)
                 }

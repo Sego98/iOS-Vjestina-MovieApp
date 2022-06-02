@@ -7,11 +7,14 @@ class CustomCollectionViewCell: UICollectionViewCell{
     static let identifier = "CustomCollectionVewCell"
     static var imageID: Int = 0
     private let heartColor = UIColor(red: 192/255, green: 192/255, blue: 192/255, alpha: 0.4)
-    public var myImage: UIButton!
+    public var myImage: UIImageView!
     public var myLabel: UILabel!
     private var myButton: UIButton!
+    private var movieId: Int!
     
     private let buttonDimension: Int = 32
+    
+    var title: String!
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -25,9 +28,10 @@ class CustomCollectionViewCell: UICollectionViewCell{
         
     func buildCell(){ //set views in the cell
         contentView.backgroundColor = .white
-        myImage = UIButton()
+        myImage = UIImageView()
         myImage.clipsToBounds = true
-        myImage.contentMode = .scaleAspectFit
+        //myImage.contentMode = .scaleToFill
+        myImage.contentMode = .scaleAspectFill
         myImage.layer.cornerRadius = 10
         contentView.addSubview(myImage)
         
@@ -40,33 +44,36 @@ class CustomCollectionViewCell: UICollectionViewCell{
         myButton.backgroundColor = heartColor
         myButton.tintColor = .white
         myButton.addTarget(self, action: #selector(heartTapped), for: .touchUpInside)
-        myImage.addSubview(myButton)
+        contentView.addSubview(myButton)
     }
     
-    public func configure(movieURL: String, id: Int){
-                //set cell image
-        CustomCollectionViewCell.imageID = id
+    public func configure(movieURL: String, movieID: Int){
         let url = URL(string: movieURL)
         let data = try? Data(contentsOf: url!)
-        myImage.setImage(UIImage(data: data!), for: .normal)
+        myImage.image = UIImage(data: data!)
+        movieId = movieID
     }
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        myImage.setImage(nil, for: .normal)
+        myImage.image = nil
+        movieId = nil
+        
     }
     
     @objc func heartTapped(){
         if myButton.currentImage == UIImage(systemName: "heart") {
             myButton.setImage(UIImage(systemName: "heart.fill"), for: .normal)
+            let dataSource = MoviesDatabaseDataSource(coreDataContext: (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext)
+            dataSource.saveMovie(id: movieId)
+           // let favorites = FavoritesViewController()
+          //  favorites.relaodTable()
         }
         else{
             myButton.setImage(UIImage(systemName: "heart"), for: .normal)
         }
     }
-    
-    
-    
+ 
     //cell constraints
     func addConstraints() {
         myImage.snp.makeConstraints {

@@ -14,13 +14,11 @@ class MovieListViewController: UIViewController{
     var recommendStack: TitleStackView!
     var trendingStack: TitleStackView!
     var topStack: TitleStackView!
-    //var upcomingStack: TitleStackView!
-
+    
     var popularCollection: MoviesCollectionView!
     var recommendCollection: MoviesCollectionView!
     var trendingCollection: MoviesCollectionView!
     var topCollection: MoviesCollectionView!
-    //var upcomingCollection: MoviesCollectionView!
     
     static var moviesTable: UITableView!
 
@@ -56,14 +54,19 @@ class MovieListViewController: UIViewController{
         let overview: String?
     }
     
+    var vc: UIViewController!
+    
     
     var apiDictionary = [String : NetworkService.Request]()
     let baseURL = "https://api.themoviedb.org/3"
     let apiKey = "api_key=d52b5d6006ac52a93e0c09485450af91"
     let baseImageURL = "https://image.tmdb.org/t/p/original"
     
+    let favorites = FavoritesViewController()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        //favorites.DeleteAllData()
         buildScreen()
         createTable()
         networkData()
@@ -95,25 +98,9 @@ extension MovieListViewController{
         //filter movies by groups
         
         for movie in MovieListViewController.movies{
-            /*let group = movie.group
-            for type in group{
-                switch type {
-                    //case .popular:
-                   //     popularURL.append(movie.imageUrl)
-                    case .freeToWatch:
-                         recommendURL.append(movie.imageUrl)
-                   // case .trending:
-                   //     trendingURL.append(movie.imageUrl)
-                   // case .topRated:
-                   //     topURL.append(movie.imageUrl)
-                    //case .upcoming:
-                    //    upcomingURL.append(movie.imageUrl)
-                default:
-                    print(1)
-                }
-            }*/
             MovieListViewController.searchedMovies.append(movie)
         }
+        
         //popular category
         popularStack = TitleStackView(titleName: "What's popular", filterNames: ["Streaming", "On TV", "For rent", "In theaters"])
         MovieListViewController.contentView.addSubview(popularStack)
@@ -153,18 +140,6 @@ extension MovieListViewController{
         topCollection.dataSource = self
         topCollection.delegate = self
         MovieListViewController.contentView.addSubview(topCollection)
-        
-        /*
-        //upcoming category
-        upcomingStack = TitleStackView(titleName: "What is available soon?", filterNames: ["This week", "This month"])
-        MovieListViewController.contentView.addSubview(upcomingStack)
-        
-        upcomingCollection = MoviesCollectionView()
-        upcomingCollection.register(CustomCollectionViewCell.self, forCellWithReuseIdentifier: CustomCollectionViewCell.identifier)
-        upcomingCollection.dataSource = self
-        upcomingCollection.delegate = self
-        MovieListViewController.contentView.addSubview(upcomingCollection)
-         */
     }
 }
 
@@ -233,9 +208,6 @@ extension MovieListViewController: UICollectionViewDataSource, UICollectionViewD
             
             case topCollection:
                 return topURL.count
-            
-           // case upcomingCollection:
-           //     return upcomingURL.count
         
             default:
                 fatalError()
@@ -248,56 +220,58 @@ extension MovieListViewController: UICollectionViewDataSource, UICollectionViewD
             fatalError()
         }
         
-        cell.myImage.addTarget(self, action: #selector(imageTapped), for: .touchUpInside)
+     //   cell.myImage.addTarget(self, action: #selector(imageTapped), for: .touchUpInside)
         
         switch collectionView{
             case popularCollection:
                 for i in (0...popularURL.count){
                     if i == indexPath.row{
-                        cell.configure(movieURL: popularURL[i], id: popularID[i])
+                        cell.configure(movieURL: popularURL[i], movieID: popularID[i])
                     }
                 }
             
             case recommendCollection:
                 for i in (0...recommendURL.count){
                     if i == indexPath.row{
-                        cell.configure(movieURL: recommendURL[i], id: recommendID[i])
+                        cell.configure(movieURL: recommendURL[i], movieID: recommendID[i])
                     }
                 }
             
             case trendingCollection:
                 for i in (0...trendingURL.count){
                     if i == indexPath.row{
-                        cell.configure(movieURL: trendingURL[i],  id: trendingID[i])
+                        cell.configure(movieURL: trendingURL[i], movieID: trendingID[i])
                     }
                 }
             
             case topCollection:
                 for i in (0...topURL.count){
                     if i == indexPath.row{
-                        cell.configure(movieURL: topURL[i], id: topID[i])
+                        cell.configure(movieURL: topURL[i], movieID: topID[i])
                     }
                 }
             
-          /*  case upcomingCollection:
-                for i in (0...upcomingURL.count){
-                    if i == indexPath.row{
-                        cell.configure(movieURL: upcomingURL[i])
-                    }
-                }
-            */
             default:
                 fatalError()
         }
         return cell
     }
     
-    @objc func imageTapped(){
-        // I don't know how to send movie ID to MovieDetailsViewConroller
-        //I know how to make API request for a specific movie, just don't know how to get its ID
-        let vc = MovieDetailsViewController()
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        switch collectionView{
+            case popularCollection:
+                vc = MovieDetailsViewController(movieID: popularID[indexPath.row])
+            case recommendCollection:
+                vc = MovieDetailsViewController(movieID: recommendID[indexPath.row])
+            case trendingCollection:
+                vc = MovieDetailsViewController(movieID: trendingID[indexPath.row])
+            
+            case topCollection:
+                vc = MovieDetailsViewController(movieID: topID[indexPath.row])
+            default:
+                fatalError()
+        }
         self.navigationController?.pushViewController(vc, animated: false)
-        MovieListViewController.currrentID = 0
     }
 }
 
@@ -372,6 +346,7 @@ extension MovieListViewController{
             request.setValue("application/json", forHTTPHeaderField: "Content-Type")
             let networkService = NetworkService()
             networkService.executeUrlRequest(request){ [self] stringValue, error in
+                
                 if let error = error {
                     print(error)
                     return
@@ -497,20 +472,6 @@ extension MovieListViewController{
             $0.height.equalTo(MovieListViewController.imageHeight)
             $0.bottom.equalToSuperview().inset(10)
         }
-        
-      /*  upcomingStack.snp.makeConstraints {
-            $0.top.equalTo(topCollection.snp.bottom).offset(20)
-            $0.leading.equalTo(searchBar.snp.leading)
-            $0.trailing.equalTo(searchBar.snp.trailing)
-        }
-        
-        upcomingCollection.snp.makeConstraints {
-            $0.top.equalTo(upcomingStack.snp.bottom).offset(10)
-            $0.leading.equalTo(searchBar.snp.leading)
-            $0.trailing.equalTo(searchBar.snp.trailing)
-            $0.height.equalTo(MovieListViewController.imageHeight)
-            $0.bottom.equalToSuperview().inset(10)
-        }*/
     }
     
     private func addTableConstraints(){

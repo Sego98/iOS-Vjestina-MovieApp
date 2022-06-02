@@ -7,6 +7,8 @@ class MovieDetailsViewController: UIViewController{
     private let backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 1)
     private let transparentColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0)
     
+    let apiKey = "api_key=d52b5d6006ac52a93e0c09485450af91"
+    
     //used variables
     private var scrollView: UIScrollView!
     private var contentView: UIView!
@@ -23,16 +25,98 @@ class MovieDetailsViewController: UIViewController{
     private var stackView1: UIStackView!
     private var stackView2: UIStackView!
     
+    var movieID: Int
+    var movie: Movie!
+    
+    init(movieID: Int) {
+        self.movieID = movieID
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad(){
         super.viewDidLoad()
         view.backgroundColor = backgroundColor
+        networkData()
         buildScreen()
         addConstraints()
     }
     
-    private func buildScreen(){
-        //scroll view
-        scrollView = UIScrollView()
+    private func networkData(){
+        DispatchQueue.global(qos: .utility).async {
+            let urlString = "https://api.themoviedb.org/3/movie/\(self.movieID)?language=en-US&page=1&\(self.apiKey)"
+            guard let url = URL(string: urlString) else { return }
+            var request = URLRequest(url: url)
+            request.httpMethod = "GET"
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            let networkService = MovieNetworkService()
+            networkService.executeUrlRequest(request){ [self] stringValue, error in
+                if let error = error {
+                    print(error)
+                    return
+                }
+                guard let valueData = stringValue else {
+                    return
+                }
+                movie = valueData
+                DispatchQueue.main.async {
+                    let url = URL(string: "https://image.tmdb.org/t/p/original\(movie.backdrop_path ?? "")")
+                    let data = try? Data(contentsOf: url!)
+                    movieImage.image =  UIImage(data: data!)
+                    movieImage.contentMode = .scaleToFill
+                    
+                    var score = movie.vote_average ?? 0
+                    score *= 10
+                    let scoreString = String(Int(score))
+                    userScore.text = "\(scoreString)% User Score"
+                    
+                    name.text = movie.title
+                    
+                    let dateNew = movie.release_date
+                    let stringArray = Array(dateNew!)
+                    var yearNew: String = ""
+                    for i in 0...3{
+                        yearNew += String(stringArray[i])
+                    }
+                    year.text = yearNew
+                    
+                    let production: String
+                    if movie.production_countries.count != 0{
+                        production = (movie.production_countries[0]?.iso_3166_1)!
+                    }
+                    else{
+                        production = ""
+                    }
+                    
+                    date.text = dateNew! + " " + production
+
+                    duration.text = String(movie.runtime!) + "m"
+                    
+                    let genres = movie.genres
+                    var genresString = ""
+                    for genre in genres{
+                        let genreName = genre?.name
+                        if genre == genres[0] {
+                            genresString += (String(genreName!))
+                        }
+                        else{
+                            genresString += (", " + String(genreName!))
+                        }
+                    }
+                    genre.text = genresString
+                    
+                    multiline.text = movie.overview
+                    contentView.isHidden = false
+                }
+            }
+        }
+    }
+    
+private func buildScreen(){        //scroll view
+            scrollView = UIScrollView()
         scrollView.backgroundColor = backgroundColor
         view.addSubview(scrollView)
         
@@ -40,33 +124,35 @@ class MovieDetailsViewController: UIViewController{
         contentView = UIView()
         contentView.backgroundColor = backgroundColor
         scrollView.addSubview(contentView)
-   
+    contentView.isHidden = true
+       
         //movie image
-        movieImage = UIImageView(image: UIImage(named: "Hobbit"))
+        movieImage = UIImageView()
         contentView.addSubview(movieImage)
-        
+            
         //user score label
-        userScore = createLabel(text: "78% User Score", fontName: "Arial", fontSize: 20, color: .white)
+        userScore = createLabel(text: "", fontName: "Arial", fontSize: 20, color: .white)
+   // userScore.isHidden = true
         movieImage.addSubview(userScore)
 
         //name label
-        name = createLabel(text: "The Hobbit", fontName: "ArialRoundedMTBold", fontSize: 40, color: .white)
+        name = createLabel(text: "", fontName: "ArialRoundedMTBold", fontSize: 40, color: .white)
         movieImage.addSubview(name)
 
-        //year label
-        year = createLabel(text: "(2012)", fontName: "Arial", fontSize: 40, color: .white)
+            //year label
+        year = createLabel(text: "", fontName: "Arial", fontSize: 40, color: .white)
         movieImage.addSubview(year)
 
-        //date label
-        date = createLabel(text: "14/12/2012 (US)", fontName: "Arial", fontSize: 20, color: .white)
+            //date label
+        date = createLabel(text: "", fontName: "Arial", fontSize: 20, color: .white)
         movieImage.addSubview(date)
 
-        //genre label
-        genre = createLabel(text: "Adventure, Fantasy", fontName: "Arial", fontSize: 20, color: .white)
+            //genre label
+        genre = createLabel(text: "", fontName: "Arial", fontSize: 20, color: .white)
         movieImage.addSubview(genre)
 
         //duration label
-        duration = createLabel(text: "2h 49m", fontName: "ArialRoundedMTBold", fontSize: 20, color: .white)
+        duration = createLabel(text: "", fontName: "ArialRoundedMTBold", fontSize: 20, color: .white)
         movieImage.addSubview(duration)
 
         //star button
@@ -76,95 +162,98 @@ class MovieDetailsViewController: UIViewController{
         imageStar.clipsToBounds = true
         imageStar.tintColor = .white
         movieImage.addSubview(imageStar)
-        
+            
         //overview label
         overview = createLabel(text: "Overview", fontName: "ArialRoundedMTBold", fontSize: 35, color: .black)
         contentView.addSubview(overview)
         
         //multiline text label
-        multiline = createLabel(text: "A reluctant Hobbit, Bilbo Baggins, sets out to the Lonely Mountain with a spirited group of dwarves to reclaim their mountain home, and the gold within it from the dragon Smaug.", fontName: "Arial", fontSize: 20, color: .black)
+        multiline = createLabel(text: "", fontName: "Arial", fontSize: 20, color: .black)
         contentView.addSubview(multiline)
-        
+            
         //first horizontal stack view
         let director = createVerticalStack(name: "Peter Jackson", title: "Director")
         let screenplay = createVerticalStack(name: "Fran Walsh", title: "Screenplay")
         let music = createVerticalStack(name: "Howard Shore", title: "Music")
-        stackView1 = createHorizontalStack(name1: director, name2: screenplay, name3: music)
+        self.stackView1 = createHorizontalStack(name1: director, name2: screenplay, name3: music)
 
         //second horizontal stack view
         let casting = createVerticalStack(name: "Scot Boland", title: "Casting  ")
         let artDirection = createVerticalStack(name: "Simon Bright", title: "Art Direction")
         let costume = createVerticalStack(name: "Bob Buck", title: "Costume")
-        stackView2 = createHorizontalStack(name1: casting, name2: artDirection, name3: costume)
-    }
+        self.stackView2 = createHorizontalStack(name1: casting, name2: artDirection, name3: costume)
     
-    //creating label
-    private func createLabel(text: String, fontName: String, fontSize: CGFloat, color: UIColor) -> UILabel{
-        let label = UILabel()
-        label.backgroundColor = transparentColor
-        label.text = text
-        label.textColor = color
-        label.font = UIFont(name: fontName, size: fontSize)
-        label.textAlignment = .left
-        label.numberOfLines = 0
-        label.sizeToFit()
-        return label
-    }
+    stackView1.isHidden = true
+    stackView2.isHidden = true
+        }
+        
+        //creating label
+        func createLabel(text: String, fontName: String, fontSize: CGFloat, color: UIColor) -> UILabel{
+            let label = UILabel()
+            label.backgroundColor = transparentColor
+            label.text = text
+            label.textColor = color
+            label.font = UIFont(name: fontName, size: fontSize)
+            label.textAlignment = .left
+            label.numberOfLines = 0
+            label.sizeToFit()
+            return label
+        }
+        
+        //creating vertical stack view with two labels
+        func createVerticalStack(name: String, title: String) -> UIStackView{
+            let attributedName = NSMutableAttributedString(string: name)
+            let attributedTitle = NSMutableAttributedString(string: title)
+            attributedName.addAttribute(.font, value: UIFont(name: "ArialRoundedMTBold", size: 15) as Any, range: NSRange(location: 0, length: name.count))
+            attributedTitle.addAttribute(.font, value: UIFont(name: "Arial", size: 15) as Any, range: NSRange(location: 0, length: title.count))
+            
+            let nameLabel = UILabel()
+            nameLabel.attributedText = attributedName
+            nameLabel.backgroundColor = transparentColor
+            nameLabel.textColor = .black
+            nameLabel.textAlignment = .left
+            nameLabel.sizeToFit()
+            contentView.addSubview(nameLabel)
+            
+            let titleLabel = UILabel()
+            titleLabel.attributedText = attributedTitle
+            titleLabel.backgroundColor = transparentColor
+            titleLabel.textColor = .black
+            titleLabel.textAlignment = .left
+            titleLabel.sizeToFit()
+            contentView.addSubview(titleLabel)
+            
+            let stackView = UIStackView()
+            stackView.axis = .vertical
+            stackView.alignment = .fill
+            stackView.distribution = .fillEqually
+            contentView.addSubview(stackView)
+            stackView.addArrangedSubview(nameLabel)
+            stackView.addArrangedSubview(titleLabel)
+            
+            return stackView
+        }
+        
+        //creating horizontal stack with three elements
+        func createHorizontalStack(name1: UIStackView, name2: UIStackView, name3: UIStackView) -> UIStackView {
+            let stackView = UIStackView()
+            stackView.axis = .horizontal
+            stackView.alignment = .fill
+            stackView.distribution = .fillEqually
+            stackView.translatesAutoresizingMaskIntoConstraints = false
+            contentView.addSubview(stackView)
+            
+            stackView.addArrangedSubview(name1)
+            stackView.addArrangedSubview(name2)
+            stackView.addArrangedSubview(name3)
+            
+            return stackView
+        }
     
-    //creating vertical stack view with two labels
-    private func createVerticalStack(name: String, title: String) -> UIStackView{
-        let attributedName = NSMutableAttributedString(string: name)
-        let attributedTitle = NSMutableAttributedString(string: title)
-        attributedName.addAttribute(.font, value: UIFont(name: "ArialRoundedMTBold", size: 15) as Any, range: NSRange(location: 0, length: name.count))
-        attributedTitle.addAttribute(.font, value: UIFont(name: "Arial", size: 15) as Any, range: NSRange(location: 0, length: title.count))
-        
-        let nameLabel = UILabel()
-        nameLabel.attributedText = attributedName
-        nameLabel.backgroundColor = transparentColor
-        nameLabel.textColor = .black
-        nameLabel.textAlignment = .left
-        nameLabel.sizeToFit()
-        contentView.addSubview(nameLabel)
-        
-        let titleLabel = UILabel()
-        titleLabel.attributedText = attributedTitle
-        titleLabel.backgroundColor = transparentColor
-        titleLabel.textColor = .black
-        titleLabel.textAlignment = .left
-        titleLabel.sizeToFit()
-        contentView.addSubview(titleLabel)
-        
-        let stackView = UIStackView()
-        stackView.axis = .vertical
-        stackView.alignment = .fill
-        stackView.distribution = .fillEqually
-        contentView.addSubview(stackView)
-        stackView.addArrangedSubview(nameLabel)
-        stackView.addArrangedSubview(titleLabel)
-        
-        return stackView
-    }
-    
-    //creating horizontal stack with three elements
-    private func createHorizontalStack(name1: UIStackView, name2: UIStackView, name3: UIStackView) -> UIStackView {
-        let stackView = UIStackView()
-        stackView.axis = .horizontal
-        stackView.alignment = .fill
-        stackView.distribution = .fillEqually
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        contentView.addSubview(stackView)
-        
-        stackView.addArrangedSubview(name1)
-        stackView.addArrangedSubview(name2)
-        stackView.addArrangedSubview(name3)
-        
-        return stackView
-    }
-    
-    private func addConstraints(){
+    func addConstraints(){
         scrollView.snp.makeConstraints {
             $0.edges.equalTo(view.safeAreaLayoutGuide)
-               }
+        }
 
         contentView.snp.makeConstraints{
             $0.edges.equalToSuperview()

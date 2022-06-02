@@ -3,4 +3,114 @@
    uuid = "0B13FDC2-B346-4EAF-9130-659F05CFDCD2"
    type = "1"
    version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "F0C7B60B-5B87-4D50-95B3-519A0D5B7861"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MovieApp/FirstCollectionView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "8"
+            endingLineNumber = "8"
+            landmarkName = "ScreenLayout"
+            landmarkType = "3">
+            <Locations>
+               <Location
+                  uuid = "F0C7B60B-5B87-4D50-95B3-519A0D5B7861 - c705aa2cddcfff3d"
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "MovieApp.ScreenLayout.makeFilterStack.getter : Swift.Optional&lt;__C.UIStackView&gt;"
+                  moduleName = "MovieApp"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/petar.ljubotina/Desktop/iOSvjestina/MovieApp/MovieApp/MovieApp/FirstCollectionView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "8"
+                  endingLineNumber = "8"
+                  offsetFromSymbolStart = "94">
+               </Location>
+               <Location
+                  uuid = "F0C7B60B-5B87-4D50-95B3-519A0D5B7861 - 3737a1b8d98eab29"
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "MovieApp.ScreenLayout.makeFilterStack.setter : Swift.Optional&lt;__C.UIStackView&gt;"
+                  moduleName = "MovieApp"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/petar.ljubotina/Desktop/iOSvjestina/MovieApp/MovieApp/MovieApp/FirstCollectionView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "8"
+                  endingLineNumber = "8"
+                  offsetFromSymbolStart = "132">
+               </Location>
+               <Location
+                  uuid = "F0C7B60B-5B87-4D50-95B3-519A0D5B7861 - 1ae941083d54d136"
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "MovieApp.ScreenLayout.makeFilterStack.modify : Swift.Optional&lt;__C.UIStackView&gt;"
+                  moduleName = "MovieApp"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/petar.ljubotina/Desktop/iOSvjestina/MovieApp/MovieApp/MovieApp/FirstCollectionView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "0"
+                  endingLineNumber = "0"
+                  offsetFromSymbolStart = "27">
+               </Location>
+               <Location
+                  uuid = "F0C7B60B-5B87-4D50-95B3-519A0D5B7861 - 867439b01914c572"
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "MovieApp.ScreenLayout.makeFilterStack.modify : Swift.Optional&lt;__C.UIStackView&gt; with unmangled suffix &quot;.resume.0&quot;"
+                  moduleName = "MovieApp"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/petar.ljubotina/Desktop/iOSvjestina/MovieApp/MovieApp/MovieApp/FirstCollectionView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "8"
+                  endingLineNumber = "8"
+                  offsetFromSymbolStart = "15">
+               </Location>
+               <Location
+                  uuid = "F0C7B60B-5B87-4D50-95B3-519A0D5B7861 - 96ce99ede2ea89b8"
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "MovieApp.ScreenLayout.init(frame: __C.CGRect) -&gt; MovieApp.ScreenLayout"
+                  moduleName = "MovieApp"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/petar.ljubotina/Desktop/iOSvjestina/MovieApp/MovieApp/MovieApp/FirstCollectionView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "8"
+                  endingLineNumber = "8"
+                  offsetFromSymbolStart = "230">
+               </Location>
+               <Location
+                  uuid = "F0C7B60B-5B87-4D50-95B3-519A0D5B7861 - dee84bbb83600bc"
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "MovieApp.ScreenLayout.init(coder: __C.NSCoder) -&gt; Swift.Optional&lt;MovieApp.ScreenLayout&gt;"
+                  moduleName = "MovieApp"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/petar.ljubotina/Desktop/iOSvjestina/MovieApp/MovieApp/MovieApp/FirstCollectionView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "8"
+                  endingLineNumber = "8"
+                  offsetFromSymbolStart = "159">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
 </Bucket>

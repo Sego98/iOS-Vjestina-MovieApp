@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="19574" systemVersion="21D62" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="MovieEntity" representedClassName=".MovieEntity" syncable="YES">
+        <attribute name="adult" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="backdrop_path" optional="YES" attributeType="String"/>
+        <attribute name="favorite" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="genre_ids" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="id" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="original_language" optional="YES" attributeType="String"/>
+        <attribute name="original_title" optional="YES" attributeType="String"/>
+        <attribute name="overview" optional="YES" attributeType="String"/>
+        <attribute name="popularity" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="poster_path" optional="YES" attributeType="String"/>
+        <attribute name="release_date" optional="YES" attributeType="String"/>
+        <attribute name="title" optional="YES" attributeType="String"/>
+        <attribute name="video" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="vote_average" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="vote_count" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="genres" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MovieGenre" inverseName="movies" inverseEntity="MovieGenre"/>
+        <relationship name="groups" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MovieGroup" inverseName="movies" inverseEntity="MovieGroup"/>
+    </entity>
+    <entity name="MovieGenre" representedClassName=".MovieGenre" syncable="YES">
+        <attribute name="action" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="adventure" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="comedy" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="crime" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="drama" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="family" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="fantasy" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="fiction" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="romance" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="science" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="thriller" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <relationship name="movies" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MovieEntity" inverseName="genres" inverseEntity="MovieEntity"/>
+    </entity>
+    <entity name="MovieGroup" representedClassName=".MovieGroup" syncable="YES">
+        <attribute name="popular" optional="YES" attributeType="String"/>
+        <attribute name="recommendations" optional="YES" attributeType="String"/>
+        <attribute name="top" optional="YES" attributeType="String"/>
+        <attribute name="trending" optional="YES" attributeType="String"/>
+        <relationship name="movies" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MovieEntity" inverseName="groups" inverseEntity="MovieEntity"/>
+    </entity>
+    <elements>
+        <element name="MovieEntity" positionX="-96.451171875" positionY="-52.28851318359375" width="107.1008911132812" height="298"/>
+        <element name="MovieGenre" positionX="79.578857421875" positionY="-86.14726257324219" width="128" height="223"/>
+        <element name="MovieGroup" positionX="-296.0619506835938" positionY="-79.1727294921875" width="128" height="118"/>
+    </elements>
+</model>

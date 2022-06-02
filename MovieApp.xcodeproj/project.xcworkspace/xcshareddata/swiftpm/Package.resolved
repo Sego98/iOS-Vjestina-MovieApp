@@ -2,6 +2,15 @@
   "object": {
     "pins": [
       {
+        "package": "MovieAppData",
+        "repositoryURL": "https://github.com/fiveagency/MovieAppData.git",
+        "state": {
+          "branch": null,
+          "revision": "cab48135221d3cbfbde766d2f2d74207489f7209",
+          "version": "1.0.0"
+        }
+      },
+      {
         "package": "PureLayout",
         "repositoryURL": "https://github.com/PureLayout/PureLayout.git",
         "state": {
