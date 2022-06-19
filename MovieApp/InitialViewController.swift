@@ -19,7 +19,7 @@ class MovieDetailsViewController: UIViewController{
     private var date: UILabel!
     private var genre: UILabel!
     private var duration: UILabel!
-    private var imageStar: UIImageView!
+    private var starButton: UIButton!
     private var overview: UILabel!
     private var multiline: UILabel!
     private var stackView1: UIStackView!
@@ -42,7 +42,10 @@ class MovieDetailsViewController: UIViewController{
         view.backgroundColor = backgroundColor
         networkData()
         buildScreen()
-        addConstraints()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        addAnimations()
     }
     
     private func networkData(){
@@ -110,84 +113,74 @@ class MovieDetailsViewController: UIViewController{
                     
                     multiline.text = movie.overview
                     contentView.isHidden = false
+                    addConstraints()
                 }
             }
         }
     }
     
-private func buildScreen(){        //scroll view
-            scrollView = UIScrollView()
+    private func buildScreen(){
+        scrollView = UIScrollView()
         scrollView.backgroundColor = backgroundColor
         view.addSubview(scrollView)
         
-        //content view
         contentView = UIView()
         contentView.backgroundColor = backgroundColor
         scrollView.addSubview(contentView)
-    contentView.isHidden = true
+        contentView.isHidden = true
        
-        //movie image
         movieImage = UIImageView()
         contentView.addSubview(movieImage)
             
-        //user score label
         userScore = createLabel(text: "", fontName: "Arial", fontSize: 20, color: .white)
-   // userScore.isHidden = true
         movieImage.addSubview(userScore)
 
-        //name label
         name = createLabel(text: "", fontName: "ArialRoundedMTBold", fontSize: 40, color: .white)
+        name.numberOfLines = 1
         movieImage.addSubview(name)
 
-            //year label
         year = createLabel(text: "", fontName: "Arial", fontSize: 40, color: .white)
         movieImage.addSubview(year)
 
-            //date label
         date = createLabel(text: "", fontName: "Arial", fontSize: 20, color: .white)
         movieImage.addSubview(date)
 
-            //genre label
         genre = createLabel(text: "", fontName: "Arial", fontSize: 20, color: .white)
         movieImage.addSubview(genre)
 
-        //duration label
         duration = createLabel(text: "", fontName: "ArialRoundedMTBold", fontSize: 20, color: .white)
         movieImage.addSubview(duration)
 
-        //star button
-        imageStar = UIImageView(image: UIImage(systemName: "star"))
-        imageStar.layer.backgroundColor = UIColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.6).cgColor
-        imageStar.layer.cornerRadius = 20
-        imageStar.clipsToBounds = true
-        imageStar.tintColor = .white
-        movieImage.addSubview(imageStar)
+        starButton = UIButton()
+        starButton.backgroundColor = UIColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.6)
+        starButton.layer.cornerRadius = 20
+        starButton.setImage(UIImage(systemName: "star"), for: .normal)
+        starButton.tintColor = .white
+        starButton.clipsToBounds = true
+        starButton.imageView?.contentMode = .scaleToFill
+        starButton.imageView?.clipsToBounds = true
+        movieImage.addSubview(starButton)
             
-        //overview label
         overview = createLabel(text: "Overview", fontName: "ArialRoundedMTBold", fontSize: 35, color: .black)
         contentView.addSubview(overview)
         
-        //multiline text label
         multiline = createLabel(text: "", fontName: "Arial", fontSize: 20, color: .black)
         contentView.addSubview(multiline)
             
-        //first horizontal stack view
         let director = createVerticalStack(name: "Peter Jackson", title: "Director")
         let screenplay = createVerticalStack(name: "Fran Walsh", title: "Screenplay")
         let music = createVerticalStack(name: "Howard Shore", title: "Music")
         self.stackView1 = createHorizontalStack(name1: director, name2: screenplay, name3: music)
 
-        //second horizontal stack view
         let casting = createVerticalStack(name: "Scot Boland", title: "Casting  ")
         let artDirection = createVerticalStack(name: "Simon Bright", title: "Art Direction")
         let costume = createVerticalStack(name: "Bob Buck", title: "Costume")
         self.stackView2 = createHorizontalStack(name1: casting, name2: artDirection, name3: costume)
     
-    stackView1.isHidden = true
-    stackView2.isHidden = true
+        stackView1.isHidden = true
+        stackView2.isHidden = true
         }
         
-        //creating label
         func createLabel(text: String, fontName: String, fontSize: CGFloat, color: UIColor) -> UILabel{
             let label = UILabel()
             label.backgroundColor = transparentColor
@@ -200,7 +193,6 @@ private func buildScreen(){        //scroll view
             return label
         }
         
-        //creating vertical stack view with two labels
         func createVerticalStack(name: String, title: String) -> UIStackView{
             let attributedName = NSMutableAttributedString(string: name)
             let attributedTitle = NSMutableAttributedString(string: title)
@@ -234,7 +226,6 @@ private func buildScreen(){        //scroll view
             return stackView
         }
         
-        //creating horizontal stack with three elements
         func createHorizontalStack(name1: UIStackView, name2: UIStackView, name3: UIStackView) -> UIStackView {
             let stackView = UIStackView()
             stackView.axis = .horizontal
@@ -260,50 +251,43 @@ private func buildScreen(){        //scroll view
             $0.width.equalTo(view)
         }
         
-        movieImage.translatesAutoresizingMaskIntoConstraints = false
-        movieImage.topAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.topAnchor).isActive = true
-        movieImage.heightAnchor.constraint(equalToConstant: 380).isActive = true
-        movieImage.leadingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.leadingAnchor).isActive = true
-        movieImage.trailingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.trailingAnchor).isActive = true
+        movieImage.snp.makeConstraints {
+            $0.top.leading.trailing.equalToSuperview()
+            $0.height.equalTo(380)
+        }
         
-        userScore.translatesAutoresizingMaskIntoConstraints = false
-        userScore.topAnchor.constraint(equalTo: movieImage.topAnchor, constant: 200).isActive = true
-        userScore.leadingAnchor.constraint(equalTo: movieImage.leadingAnchor, constant: 20).isActive = true
+        userScore.snp.makeConstraints {
+            $0.top.equalToSuperview().offset(200)
+            $0.leading.equalToSuperview().offset(20)
+        }
+
+        year.snp.makeConstraints {
+            $0.top.equalTo(name.snp.top)
+            $0.leading.equalTo(name.snp.trailing).offset(5)
+            $0.trailing.equalToSuperview().inset(5)
+        }
         
-        name.translatesAutoresizingMaskIntoConstraints = false
-        name.topAnchor.constraint(equalTo: userScore.bottomAnchor, constant: 5).isActive = true
-        name.leadingAnchor.constraint(equalTo: userScore.leadingAnchor).isActive = true
+        duration.snp.makeConstraints {
+            $0.top.equalTo(date.snp.bottom).offset(5)
+            $0.leading.equalTo(genre.snp.trailing).offset(10)
+        }
         
-        year.translatesAutoresizingMaskIntoConstraints = false
-        year.topAnchor.constraint(equalTo: userScore.bottomAnchor, constant: 5).isActive = true
-        year.leadingAnchor.constraint(equalTo: name.trailingAnchor).isActive = true
+        starButton.snp.makeConstraints {
+            $0.top.equalTo(genre.snp.bottom).offset(3)
+            $0.leading.equalTo(genre.snp.leading)
+            $0.width.height.equalTo(35)
+        }
         
-        date.translatesAutoresizingMaskIntoConstraints = false
-        date.topAnchor.constraint(equalTo: name.bottomAnchor, constant: 10).isActive = true
-        date.leadingAnchor.constraint(equalTo: userScore.leadingAnchor).isActive = true
+        overview.snp.makeConstraints {
+            $0.top.equalTo(movieImage.snp.bottom).offset(20)
+            $0.leading.equalTo(movieImage.snp.leading).offset(20)
+        }
         
-        genre.translatesAutoresizingMaskIntoConstraints = false
-        genre.topAnchor.constraint(equalTo: date.bottomAnchor, constant: 5).isActive = true
-        genre.leadingAnchor.constraint(equalTo: userScore.leadingAnchor).isActive = true
-        
-        duration.translatesAutoresizingMaskIntoConstraints = false
-        duration.topAnchor.constraint(equalTo: date.bottomAnchor, constant: 5).isActive = true
-        duration.leadingAnchor.constraint(equalTo: genre.trailingAnchor, constant: 10).isActive = true
-        
-        imageStar.translatesAutoresizingMaskIntoConstraints = false
-        imageStar.topAnchor.constraint(equalTo: genre.bottomAnchor).isActive = true
-        imageStar.leadingAnchor.constraint(equalTo: genre.leadingAnchor).isActive = true
-        imageStar.widthAnchor.constraint(equalToConstant: 35).isActive = true
-        imageStar.heightAnchor.constraint(equalToConstant: 35).isActive = true
-        
-        overview.translatesAutoresizingMaskIntoConstraints = false
-        overview.topAnchor.constraint(equalTo: movieImage.bottomAnchor, constant: 20).isActive = true
-        overview.leadingAnchor.constraint(equalTo: movieImage.leadingAnchor, constant: 20).isActive = true
-        
-        multiline.translatesAutoresizingMaskIntoConstraints = false
-        multiline.topAnchor.constraint(equalTo: overview.bottomAnchor, constant: 5).isActive = true
-        multiline.leadingAnchor.constraint(equalTo: overview.leadingAnchor).isActive = true
-        multiline.trailingAnchor.constraint(equalTo: movieImage.trailingAnchor, constant: -20).isActive = true
+        multiline.snp.makeConstraints {
+            $0.top.equalTo(overview.snp.bottom).offset(5)
+            $0.leading.equalTo(overview.snp.leading)
+            $0.trailing.equalTo(movieImage.snp.trailing).inset(20)
+        }
         
         stackView1.translatesAutoresizingMaskIntoConstraints = false
         stackView1.topAnchor.constraint(equalTo: multiline.bottomAnchor, constant: 20).isActive = true
@@ -315,5 +299,31 @@ private func buildScreen(){        //scroll view
         stackView2.leadingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.leadingAnchor, constant: 20).isActive = true
         stackView2.trailingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.trailingAnchor, constant: -20).isActive = true
         stackView2.bottomAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.bottomAnchor, constant: -20).isActive = true
+    }
+    
+    func addAnimations() {
+        UIView.animate(withDuration: 1, delay: 0, options: .curveLinear, animations: {
+            self.name.snp.makeConstraints {
+                $0.top.equalTo(self.userScore.snp.bottom).offset(5)
+                $0.leading.equalTo(self.movieImage.snp.leading).offset(20)
+            }
+            self.view.layoutIfNeeded()
+            }, completion: nil)
+
+        UIView.animate(withDuration: 1, delay: 0.5, options: .curveLinear, animations: {
+            self.date.snp.remakeConstraints {
+                $0.top.equalTo(self.name.snp.bottom).offset(10)
+                $0.leading.equalToSuperview().offset(20)
+            }
+            self.view.layoutIfNeeded()
+            }, completion: nil)
+        
+        UIView.animate(withDuration: 1, delay: 0.75, options: .curveEaseInOut, animations: {
+            self.genre.snp.makeConstraints {
+                $0.top.equalTo(self.date.snp.bottom).offset(5)
+                $0.leading.equalTo(self.userScore.snp.leading)
+            }
+            self.view.layoutIfNeeded()
+            }, completion: nil)
     }
 }

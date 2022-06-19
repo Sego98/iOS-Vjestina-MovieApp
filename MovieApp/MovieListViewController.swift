@@ -143,7 +143,6 @@ extension MovieListViewController{
     }
 }
 
-//functions to set table view
 extension MovieListViewController: UITableViewDelegate, UITableViewDataSource{
     
     func createTable(){
@@ -188,7 +187,6 @@ extension MovieListViewController: UITableViewDelegate, UITableViewDataSource{
     }
 }
 
-//functions to set collection views
 extension MovieListViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout{
 
     func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -198,10 +196,10 @@ extension MovieListViewController: UICollectionViewDataSource, UICollectionViewD
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch collectionView{
             case popularCollection:
-            return popularURL.count
+                return popularURL.count
                 
             case recommendCollection:
-            return recommendURL.count
+                return recommendURL.count
             
             case trendingCollection:
                 return trendingURL.count
@@ -219,9 +217,7 @@ extension MovieListViewController: UICollectionViewDataSource, UICollectionViewD
         else{
             fatalError()
         }
-        
-     //   cell.myImage.addTarget(self, action: #selector(imageTapped), for: .touchUpInside)
-        
+            
         switch collectionView{
             case popularCollection:
                 for i in (0...popularURL.count){
@@ -265,7 +261,6 @@ extension MovieListViewController: UICollectionViewDataSource, UICollectionViewD
                 vc = MovieDetailsViewController(movieID: recommendID[indexPath.row])
             case trendingCollection:
                 vc = MovieDetailsViewController(movieID: trendingID[indexPath.row])
-            
             case topCollection:
                 vc = MovieDetailsViewController(movieID: topID[indexPath.row])
             default:

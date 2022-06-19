@@ -88,7 +88,6 @@ extension SearchBarView: UITextFieldDelegate{ //protocol funtions for search bar
     }
     
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
-        //textField.becomeFirstResponder() //tried to make keyboard available when search bar is pressed
         cancel = UIButton()
         cancel.backgroundColor = .clear
         let attributedTitle = NSMutableAttributedString(string: "Cancel")

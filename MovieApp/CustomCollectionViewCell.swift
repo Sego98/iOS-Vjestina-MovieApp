@@ -61,16 +61,17 @@ class CustomCollectionViewCell: UICollectionViewCell{
         
     }
     
-    @objc func heartTapped(){
+    @objc func heartTapped(sender: UIButton){
         if myButton.currentImage == UIImage(systemName: "heart") {
-            myButton.setImage(UIImage(systemName: "heart.fill"), for: .normal)
-            let dataSource = MoviesDatabaseDataSource(coreDataContext: (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext)
-            dataSource.saveMovie(id: movieId)
-           // let favorites = FavoritesViewController()
-          //  favorites.relaodTable()
+            UIView.transition(with: sender, duration: 1, options: .transitionCrossDissolve, animations: {
+                sender.setImage(UIImage(systemName: "heart.fill"), for: .normal)
+                        }, completion: nil)
+
         }
         else{
-            myButton.setImage(UIImage(systemName: "heart"), for: .normal)
+            UIView.transition(with: sender, duration: 1, options: .transitionCrossDissolve, animations: {
+                sender.setImage(UIImage(systemName: "heart"), for: .normal)
+                        }, completion: nil)
         }
     }
  

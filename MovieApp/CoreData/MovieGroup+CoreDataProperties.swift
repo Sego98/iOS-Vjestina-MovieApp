@@ -2,7 +2,7 @@
 //  MovieGroup+CoreDataProperties.swift
 //  MovieApp
 //
-//  Created by Petar Ljubotina on 02.06.2022..
+//  Created by Petar Ljubotina on 19.06.2022..
 //
 //
 
@@ -16,10 +16,11 @@ extension MovieGroup {
         return NSFetchRequest<MovieGroup>(entityName: "MovieGroup")
     }
 
-    @NSManaged public var popular: String?
-    @NSManaged public var recommendations: String?
-    @NSManaged public var top: String?
-    @NSManaged public var trending: String?
+    @NSManaged public var popular: Bool
+    @NSManaged public var recommended: Bool
+    @NSManaged public var trending: Bool
+    @NSManaged public var top: Bool
+    @NSManaged public var movies: MovieEntity?
 
 }
 
